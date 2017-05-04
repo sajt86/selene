@@ -1,1 +1,1 @@
-﻿msiexec /q /I "googlechromestandaloneenterprise64.msi"
+﻿Start-Process msiexec -ArgumentList "/q", "/I", "googlechromestandaloneenterprise64.msi" -wait
