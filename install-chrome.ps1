@@ -1,0 +1,1 @@
+﻿msiexec /q /I "googlechromestandaloneenterprise64.msi"

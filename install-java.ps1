@@ -1,0 +1,1 @@
+﻿Start-Process "jre-8u131-windows-x64.exe" -ArgumentList "/s" -wait -NoNewWindow
