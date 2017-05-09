@@ -100,6 +100,17 @@ Add-FirewallException -port $winrmHttpsPort
 & .\install-chrome.ps1
 & .\install-java.ps1
 
+#Start up selenium hub
+[System.IO.Directory]::CreateDirectory("C:\Selenium\") 
+
+Add-Type -AssemblyName System.IO.Compression.FileSystem
+[IO.Compression.ZipFile]::ExtractToDirectory("C:\Selenium\SeleniumServerPackage.zip","C:\Selenium")
+
+Start-Process -FilePath "c:\Program Files\Java\jre1.8.0_131\bin\java.exe" -ArgumentList "-jar C:\Selenium\HubPackage\selenium-server-standalone-3.4.0.jar","-role hub"
+
+#firewall rule
+New-NetFirewallRule -DisplayName Selenium -LocalPort 4444 -Protocol TCP
+
 #disable ie enhanced security configuration
 $AdminKey = "HKLM:\SOFTWARE\Microsoft\Active Setup\Installed Components\{A509B1A7-37EF-4b3f-8CFC-4F3A74704073}"
 $UserKey = "HKLM:\SOFTWARE\Microsoft\Active Setup\Installed Components\{A509B1A8-37EF-4b3f-8CFC-4F3A74704073}"
