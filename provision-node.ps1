@@ -104,7 +104,7 @@ Add-FirewallException -port $winrmHttpsPort
 [System.IO.Directory]::CreateDirectory("C:\Selenium\") 
 
 Add-Type -AssemblyName System.IO.Compression.FileSystem
-[IO.Compression.ZipFile]::ExtractToDirectory("C:\Selenium\SeleniumServerPackage.zip","C:\Selenium")
+[IO.Compression.ZipFile]::ExtractToDirectory("SeleniumServerPackage.zip","C:\Selenium")
 
 Start-Process -FilePath "c:\Program Files\Java\jre1.8.0_131\bin\java.exe" -ArgumentList "-jar C:\Selenium\HubPackage\selenium-server-standalone-3.4.0.jar","-role hub"
 
