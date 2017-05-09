@@ -9,7 +9,10 @@
 param
 (
     [Parameter(Mandatory = $true)]
-    [string] $HostName
+    [string] $HostName,
+
+    [Parameter(Mandatory = $true)]
+    [string] $ServerMode
 )
 
 #################################################################################################################################
@@ -100,16 +103,25 @@ Add-FirewallException -port $winrmHttpsPort
 & .\install-chrome.ps1
 & .\install-java.ps1
 
-#Start up selenium hub
+
 [System.IO.Directory]::CreateDirectory("C:\Selenium\") 
 
 Add-Type -AssemblyName System.IO.Compression.FileSystem
 [IO.Compression.ZipFile]::ExtractToDirectory("SeleniumServerPackage.zip","C:\Selenium")
 
-Start-Process -FilePath "c:\Program Files\Java\jre1.8.0_131\bin\java.exe" -ArgumentList "-jar C:\Selenium\HubPackage\selenium-server-standalone-3.4.0.jar","-role hub"
+if($ServerMode -eq "Hub")
+{
+    #Start up selenium hub
+    Start-Process -FilePath "c:\Program Files\Java\jre1.8.0_131\bin\java.exe" -ArgumentList "-jar C:\Selenium\HubPackage\selenium-server-standalone-3.4.0.jar","-role hub"
+}
+else
+{
+    Start-Process -FilePath "c:\Program Files\Java\jre1.8.0_131\bin\java.exe" -ArgumentList "-Dwebdriver.ie.driver=C:\Selenium\HubPackage\IEDriverServer.exe","-Dwebdriver.chrome.driver=C:\Selenium\HubPackage\chromedriver.exe","-jar C:\Selenium\HubPackage\selenium-server-standalone-3.4.0.jar","-role node","-hub http://sel-master-0.westeurope.cloudapp.azure.com:4444"
+}
 
 #firewall rule
-New-NetFirewallRule -DisplayName Selenium -LocalPort 4444 -Protocol TCP
+New-NetFirewallRule -DisplayName SeleniumIN -LocalPort 4444 -Protocol TCP
+New-NetFirewallRule -DisplayName SeleniumOut -LocalPort 4444 -Protocol TCP -Direction Outbound
 
 #disable ie enhanced security configuration
 $AdminKey = "HKLM:\SOFTWARE\Microsoft\Active Setup\Installed Components\{A509B1A7-37EF-4b3f-8CFC-4F3A74704073}"
