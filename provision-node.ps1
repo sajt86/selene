@@ -120,8 +120,8 @@ else
 }
 
 #firewall rule
-New-NetFirewallRule -DisplayName SeleniumIN -LocalPort 4444 -Protocol TCP
-New-NetFirewallRule -DisplayName SeleniumOut -LocalPort 4444 -Protocol TCP -Direction Outbound
+New-NetFirewallRule -DisplayName SeleniumIN -LocalAddress "10.0.0.0/24" -Protocol Any
+New-NetFirewallRule -DisplayName SeleniumOUT -LocalAddress "10.0.0.0/24" -Protocol Any -Direction Outbound
 
 #disable ie enhanced security configuration
 $AdminKey = "HKLM:\SOFTWARE\Microsoft\Active Setup\Installed Components\{A509B1A7-37EF-4b3f-8CFC-4F3A74704073}"
